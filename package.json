@@ -42,10 +42,7 @@
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ],
-    "coverageReporters": [
-      "text",
-      "html"
-    ]
+    "coverageReporters": ["json", "lcov", "text", "clover", "html"]
   },
   "husky": {
     "hooks": {
