@@ -2,7 +2,6 @@ language: node_js
 cache:
   directories:
     - node_modules
-sudo: false
 env:
   - TEST_TYPE=coverage CACHE_NAME=JOB1
   - TEST_TYPE=codestyle CACHE_NAME=JOB1
