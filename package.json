@@ -5,8 +5,8 @@
   "main": "useGlobalState.js",
   "scripts": {
     "test": "jest",
-    "coverage": "jest --coverage",
-    "lint": "eslint ."
+    "test:coverage": "jest --coverage",
+    "test:codestyle": "eslint ."
   },
   "author": "a@borovin.com",
   "license": "MIT",
@@ -49,7 +49,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm test && npm run lint"
+      "pre-push": "npm test && npm run test:codestyle"
     }
   }
 }
