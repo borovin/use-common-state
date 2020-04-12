@@ -5,8 +5,10 @@ cache:
 jobs:
   include:
     - stage: test
+      name: "Codestyle"
       script: npm run test:codestyle
-    - script: npm run test:coverage
+    - name: "Coverage"
+      script: npm run test:coverage
       after_script: bash <(curl -s https://codecov.io/bash)
     - stage: release
       script: npm run release
