@@ -5,9 +5,8 @@
   "main": "src/useGlobalState.js",
   "scripts": {
     "test": "jest --config .jestrc.json",
-    "test:coverage": "npm run test -- --coverage",
-    "test:codestyle": "eslint .",
-    "release": "semantic-release"
+    "coverage": "npm run test -- --coverage",
+    "lint": "eslint ."
   },
   "author": "a@borovin.com",
   "license": "MIT",

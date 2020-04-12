@@ -5,10 +5,14 @@ cache:
 jobs:
   include:
     - stage: test
-      name: "Codestyle"
-      script: npm run test:codestyle
-    - name: "Coverage"
-      script: npm run test:coverage
+      name: "lint"
+      script: npm run lint
+    - name: "coverage"
+      script: npm run coverage
       after_script: bash <(curl -s https://codecov.io/bash)
     - stage: release
-      script: npm run release
+      deploy:
+          provider: script
+          skip_cleanup: true
+          script:
+            - npx semantic-release
