@@ -29,7 +29,7 @@ export function setGlobalState(path, updater) {
   });
 }
 
-function useGlobalState(path) {
+function useGlobalState(path, defaultValue) {
   const normalizedPath = toPath(path);
   const stringifiedPath = pathToString(normalizedPath);
   const localStateSetter = useState()[1];
@@ -46,7 +46,7 @@ function useGlobalState(path) {
     setGlobalState(normalizedPath, updater);
   }, [stringifiedPath]);
 
-  return [get(globalState, normalizedPath), setState];
+  return [get(globalState, normalizedPath, defaultValue), setState];
 }
 
 export default useGlobalState;
