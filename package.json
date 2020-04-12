@@ -1,12 +1,14 @@
 {
   "name": "use-global-state",
-  "version": "0.0.1",
+  "version": "0.0.0-development",
   "description": "",
   "main": "useGlobalState.js",
   "scripts": {
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "test:codestyle": "eslint ."
+    "test:codestyle": "eslint .",
+    "semantic-release": "semantic-release",
+    "commit": "npx git-cz"
   },
   "author": "a@borovin.com",
   "license": "MIT",
@@ -16,6 +18,7 @@
     "@babel/preset-react": "^7.9.4",
     "@types/jest": "^25.1.4",
     "babel-jest": "^25.2.3",
+    "cz-conventional-changelog": "^3.1.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.4.4",
@@ -29,7 +32,8 @@
     "husky": "^4.2.3",
     "jest": "^25.2.3",
     "prettier": "^2.0.2",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "semantic-release": "^17.0.4"
   },
   "dependencies": {
     "lodash": "^4.17.15",
@@ -42,11 +46,26 @@
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ],
-    "coverageReporters": ["json", "lcov", "text", "clover", "html"]
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "clover",
+      "html"
+    ]
   },
   "husky": {
     "hooks": {
       "pre-push": "npm test && npm run test:codestyle"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/borovin/use-global-state.git"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
     }
   }
 }
