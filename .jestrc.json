@@ -1,0 +1,15 @@
+{
+  "setupFiles": [
+    "./.jestSetup.js"
+  ],
+  "snapshotSerializers": [
+    "enzyme-to-json/serializer"
+  ],
+  "coverageReporters": [
+    "json",
+    "lcov",
+    "text",
+    "clover",
+    "html"
+  ]
+}
