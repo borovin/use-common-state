@@ -1,21 +1,21 @@
-import { mount } from "enzyme";
-import React, { useEffect } from "react";
-import { act } from "react-dom/test-utils";
+import { mount } from 'enzyme';
+import React, { useEffect } from 'react';
+import { act } from 'react-dom/test-utils';
 import useGlobalState, {
   initGlobalState,
   setGlobalState,
   localStateSetters,
-} from "./useGlobalState";
+} from './useGlobalState';
 
 const UserName1 = (props) => {
   const { userId } = props;
   const [firstName] = useGlobalState(
-    ["users", userId, "firstName"],
-    "defaultFirstName"
+    ['users', userId, 'firstName'],
+    'defaultFirstName',
   );
   const [lastName] = useGlobalState(
     `users.${userId}.lastName`,
-    "defaultLastName"
+    'defaultLastName',
   );
 
   return `${firstName} ${lastName}`;
@@ -23,46 +23,46 @@ const UserName1 = (props) => {
 
 const UserName2 = (props) => {
   const { userId } = props;
-  const [user] = useGlobalState(["users", userId]);
+  const [user] = useGlobalState(['users', userId]);
 
   return `${user.firstName} ${user.lastName}`;
 };
 
 const UserName3 = (props) => {
   const { userId } = props;
-  const [user, setUser] = useGlobalState(["users", userId]);
+  const [user, setUser] = useGlobalState(['users', userId]);
 
   useEffect(() => {
     setUser({
-      firstName: "Tony",
-      lastName: "Stark",
+      firstName: 'Tony',
+      lastName: 'Stark',
     });
   }, [setUser]);
 
   return `${user.firstName} ${user.lastName}`;
 };
 
-describe("useGlobalState hook", () => {
+describe('useGlobalState hook', () => {
   beforeEach(() => {
     initGlobalState({
       users: [
         {
-          firstName: "Steve",
-          lastName: "Rogers",
+          firstName: 'Steve',
+          lastName: 'Rogers',
         },
         {
-          firstName: "Carol",
-          lastName: "Danvers",
+          firstName: 'Carol',
+          lastName: 'Danvers',
         },
         {
-          firstName: "Natasha",
-          lastName: "Romanov",
+          firstName: 'Natasha',
+          lastName: 'Romanov',
         },
       ],
     });
   });
 
-  it("should render initial state", () => {
+  it('should render initial state', () => {
     const userName = mount(<UserName1 userId={0} />);
 
     expect(userName).toMatchInlineSnapshot(`
@@ -76,12 +76,12 @@ describe("useGlobalState hook", () => {
     userName.unmount();
   });
 
-  it("should render updated state", () => {
+  it('should render updated state', () => {
     const userName = mount(<UserName1 userId={0} />);
 
     act(() => {
-      setGlobalState(["users", 0, "firstName"], "Bruce");
-      setGlobalState("users.0.lastName", () => "Banner");
+      setGlobalState(['users', 0, 'firstName'], 'Bruce');
+      setGlobalState('users.0.lastName', () => 'Banner');
     });
 
     userName.update();
@@ -97,13 +97,13 @@ describe("useGlobalState hook", () => {
     userName.unmount();
   });
 
-  it("should render updated top state", () => {
+  it('should render updated top state', () => {
     const userName = mount(<UserName1 userId={0} />);
 
     act(() => {
-      setGlobalState(["users", 0], {
-        firstName: "Bruce",
-        lastName: "Banner",
+      setGlobalState(['users', 0], {
+        firstName: 'Bruce',
+        lastName: 'Banner',
       });
     });
 
@@ -120,7 +120,7 @@ describe("useGlobalState hook", () => {
     userName.unmount();
   });
 
-  it("should render nested state", () => {
+  it('should render nested state', () => {
     const userName = mount(<UserName2 userId={0} />);
 
     expect(userName).toMatchInlineSnapshot(`
@@ -134,13 +134,13 @@ describe("useGlobalState hook", () => {
     userName.unmount();
   });
 
-  it("should render updated nested state", () => {
+  it('should render updated nested state', () => {
     const userName = mount(<UserName2 userId={0} />);
 
     act(() => {
-      setGlobalState(["users", 0], {
-        firstName: "Bruce",
-        lastName: "Banner",
+      setGlobalState(['users', 0], {
+        firstName: 'Bruce',
+        lastName: 'Banner',
       });
     });
 
@@ -157,11 +157,11 @@ describe("useGlobalState hook", () => {
     userName.unmount();
   });
 
-  it("should render updated nested state field", () => {
+  it('should render updated nested state field', () => {
     const userName = mount(<UserName2 userId={0} />);
 
     act(() => {
-      setGlobalState(["users", 0, "firstName"], "Bruce");
+      setGlobalState(['users', 0, 'firstName'], 'Bruce');
     });
 
     userName.update();
@@ -177,7 +177,7 @@ describe("useGlobalState hook", () => {
     userName.unmount();
   });
 
-  it("should render updated props", () => {
+  it('should render updated props', () => {
     const userName1 = mount(<UserName1 userId={0} />);
     const userName2 = mount(<UserName2 userId={0} />);
 
@@ -203,15 +203,15 @@ describe("useGlobalState hook", () => {
     userName2.unmount();
   });
 
-  it("should remove local setter on unmount", () => {
+  it('should remove local setter on unmount', () => {
     const userName = mount(<UserName1 userId={0} />);
 
     userName.unmount();
 
-    expect(localStateSetters).toMatchInlineSnapshot("Map {}");
+    expect(localStateSetters).toMatchInlineSnapshot('Map {}');
   });
 
-  it("should remove local setter on path change", () => {
+  it('should remove local setter on path change', () => {
     const userName = mount(<UserName1 userId={0} />);
 
     userName.setProps({ userId: 2 });
@@ -226,10 +226,10 @@ describe("useGlobalState hook", () => {
     userName.unmount();
   });
 
-  it("should not remove local setter on prop change", () => {
+  it('should not remove local setter on prop change', () => {
     const userName = mount(<UserName1 userId={0} label="test_label_1" />);
 
-    userName.setProps({ label: "test_label_2" });
+    userName.setProps({ label: 'test_label_2' });
 
     expect(localStateSetters).toMatchInlineSnapshot(`
       Map {
@@ -241,7 +241,7 @@ describe("useGlobalState hook", () => {
     userName.unmount();
   });
 
-  it("should update global state on mount", () => {
+  it('should update global state on mount', () => {
     let userName;
 
     act(() => {
@@ -259,7 +259,7 @@ describe("useGlobalState hook", () => {
     `);
   });
 
-  it("should render default state value", () => {
+  it('should render default state value', () => {
     const userName = mount(<UserName1 userId={10} />);
 
     expect(userName).toMatchInlineSnapshot(`
