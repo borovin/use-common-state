@@ -13,4 +13,4 @@ jobs:
       after_script: bash <(curl -s https://codecov.io/bash)
     - stage: release
       name: "semantic release"
-      script: npx semantic-release
+      script: npx semantic-release ./build

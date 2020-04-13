@@ -4,17 +4,22 @@
   "description": "React global state management hook",
   "main": "src/useGlobalState.js",
   "scripts": {
-    "test": "jest --config .jestrc.json",
+    "test": "jest",
     "coverage": "npm run test -- --coverage",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build": "babel ./src --out-dir ./build --ignore \"**/*.test.jsx\"",
+    "prebuild": "rimraf build",
+    "prebublish": "npm run build"
   },
   "author": "a@borovin.com",
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
     "@babel/preset-react": "^7.9.4",
     "@types/jest": "^25.1.4",
+    "babel-cli": "^6.26.0",
     "babel-jest": "^25.2.3",
     "commitizen": "^4.0.4",
     "cz-conventional-changelog": "^3.1.0",
