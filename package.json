@@ -2,14 +2,14 @@
   "name": "@basket/use-global-state",
   "version": "0.0.0-development",
   "description": "React global state management hook",
-  "main": "src/useGlobalState.js",
+  "main": "useGlobalState.js",
   "scripts": {
     "test": "jest",
     "coverage": "npm run test -- --coverage",
     "lint": "eslint .",
     "build": "babel ./src --out-dir ./build --ignore \"**/*.test.jsx\"",
     "prebuild": "rimraf build",
-    "prebublish": "npm run build"
+    "postbuild": "node setupPackage"
   },
   "author": "a@borovin.com",
   "license": "MIT",
