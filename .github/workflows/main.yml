@@ -1,10 +1,10 @@
 on: push
 env:
   CI: true
-strategy:
-  matrix:
-    node: [12]
 jobs:
+  strategy:
+    matrix:
+      node: [12]
   coverage:
     runs-on: ubuntu-latest
     steps:
