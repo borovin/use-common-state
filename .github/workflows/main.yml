@@ -9,6 +9,13 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: 12
+    - uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-cache-
+          ${{ runner.os }}-
     - run: npm ci 
     - run: npm run coverage
   lint:
@@ -18,5 +25,12 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: 12
+    - uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-cache-
+          ${{ runner.os }}-
     - run: npm ci 
     - run: npm run lint
