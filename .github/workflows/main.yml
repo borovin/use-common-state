@@ -10,9 +10,18 @@ defaults:
       node-version: '12.x'
   - run: npm ci
 jobs:
+  install:
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+    with:
+      node-version: '12.x'
+    - run: npm ci 
   coverage:
+    needs: install
     steps:
     - run: npm run coverage
   lint:
+    needs: install
     steps:
     - run: npm run lint
