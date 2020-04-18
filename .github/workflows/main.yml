@@ -12,7 +12,7 @@ defaults:
 jobs:
   coverage:
     steps:
-      run: npm run coverage
+    - run: npm run coverage
   lint:
     steps:
-      run: npm run lint
+    - run: npm run lint
