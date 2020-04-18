@@ -11,6 +11,8 @@ defaults:
   - run: npm ci
 jobs:
   coverage:
-    run: npm run coverage
+    steps:
+      run: npm run coverage
   lint:
-    run: npm run lint
+    steps:
+      run: npm run lint
