@@ -2,16 +2,13 @@ on: push
 env:
   CI: true
 jobs:
-  strategy:
-    matrix:
-      node: [12]
   coverage:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node }}
+        node-version: 12
     - run: npm ci 
     - run: npm run coverage
   lint:
@@ -20,6 +17,6 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node }}
+        node-version: 12
     - run: npm ci 
     - run: npm run lint
