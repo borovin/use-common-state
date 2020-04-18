@@ -9,8 +9,14 @@ import useGlobalState, {
 
 const UserName1 = (props) => {
   const { userId } = props;
-  const [firstName] = useGlobalState(['users', userId, 'firstName']);
-  const [lastName] = useGlobalState(`users.${userId}.lastName`);
+  const [firstName] = useGlobalState(
+    ['users', userId, 'firstName'],
+    'defaultFirstName',
+  );
+  const [lastName] = useGlobalState(
+    `users.${userId}.lastName`,
+    'defaultLastName',
+  );
 
   return `${firstName} ${lastName}`;
 };
@@ -57,30 +63,13 @@ describe('useGlobalState hook', () => {
   });
 
   it('should render initial state', () => {
-    initGlobalState({
-      users: [
-        {
-          firstName: 'Tony',
-          lastName: 'Stark',
-        },
-        {
-          firstName: 'Carol',
-          lastName: 'Danvers',
-        },
-        {
-          firstName: 'Natasha',
-          lastName: 'Romanov',
-        },
-      ],
-    });
-
     const userName = mount(<UserName1 userId={0} />);
 
     expect(userName).toMatchInlineSnapshot(`
       <UserName1
         userId={0}
       >
-        Tony Stark
+        Steve Rogers
       </UserName1>
     `);
 
@@ -268,5 +257,19 @@ describe('useGlobalState hook', () => {
         Tony Stark
       </UserName3>
     `);
+  });
+
+  it('should render default state value', () => {
+    const userName = mount(<UserName1 userId={10} />);
+
+    expect(userName).toMatchInlineSnapshot(`
+      <UserName1
+        userId={10}
+      >
+        defaultFirstName defaultLastName
+      </UserName1>
+    `);
+
+    userName.unmount();
   });
 });

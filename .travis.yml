@@ -1,14 +1,17 @@
 language: node_js
+if: tag IS blank
 cache:
   directories:
     - node_modules
-env:
-  - TEST_TYPE=coverage CACHE_NAME=JOB1
-  - TEST_TYPE=codestyle CACHE_NAME=JOB1
-script:
-  - npm run test:$TEST_TYPE
-after_script:
-  - |
-      if [ "$TEST_TYPE" == coverage ]; then
-        bash <(curl -s https://codecov.io/bash)
-      fi
+jobs:
+  include:
+    - stage: test
+      name: "lint"
+      script: npm run lint
+    - name: "coverage"
+      script: npm run coverage
+      after_script: bash <(curl -s https://codecov.io/bash)
+    - stage: release
+      name: "semantic release"
+      before_script: npm run build
+      script: cd ./build && npx semantic-release
