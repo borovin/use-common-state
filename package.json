@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "build": "babel ./src --out-dir ./build --ignore \"**/*.test.jsx\"",
     "prebuild": "rimraf build",
-    "postbuild": "node setupPackage"
+    "postbuild": "node ./scripts/setupRelease",
+    "release": "cd ./build && npx semantic-release"
   },
   "author": "a@borovin.com",
   "license": "MIT",
