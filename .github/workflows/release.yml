@@ -2,10 +2,8 @@ on:
   push:
     paths:
     - 'src/**/*.js'
-    - 'src/**/*.jsx'
     - 'package.json'
-    - '!src/**/*.test.js'
-    - '!src/**/*.test.jsx'
+    - 'babel.config.js'
 env:
   CI: true
   node_version: 12
