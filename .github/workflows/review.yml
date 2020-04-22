@@ -1,5 +1,4 @@
 on: push
-name: review
 env:
   CI: true
   node_version: 12

@@ -6,7 +6,6 @@ on:
     - 'package.json'
     - '!src/**/*.test.js'
     - '!src/**/*.test.jsx'
-name: release
 env:
   CI: true
   node_version: 12
