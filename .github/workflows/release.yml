@@ -1,0 +1,30 @@
+on:
+  push:
+    paths:
+    - 'src/**/*.js'
+    - 'src/**/*.jsx'
+    - 'package.json'
+    - '!src/**/*.test.js'
+    - '!src/**/*.test.jsx'
+name: release
+env:
+  CI: true
+  node_version: 12
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.node_version }}
+    - uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+    - run: npm ci
+    - run: npm test
+    - run: npm run build
+    - run: npm run release
