@@ -2,4 +2,5 @@ coverage
 build
 node_modules
 build
+.codacy-coverage
 .DS_Store
