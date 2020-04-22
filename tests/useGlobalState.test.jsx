@@ -5,7 +5,7 @@ import useGlobalState, {
   initGlobalState,
   setGlobalState,
   localStateSetters,
-} from './useGlobalState';
+} from '../src/useGlobalState';
 
 const UserName1 = (props) => {
   const { userId } = props;

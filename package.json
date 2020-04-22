@@ -7,9 +7,10 @@
     "test": "jest",
     "coverage": "npm run test -- --coverage",
     "lint": "eslint .",
-    "build": "babel ./src --out-dir ./build --ignore \"**/*.test.jsx\"",
+    "build": "babel ./src --out-dir ./build",
     "prebuild": "rimraf build",
-    "postbuild": "node setupPackage"
+    "postbuild": "node ./scripts/setupRelease",
+    "release": "cd ./build && npx semantic-release"
   },
   "author": "a@borovin.com",
   "license": "MIT",
