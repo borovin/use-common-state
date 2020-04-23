@@ -1,5 +1,5 @@
 {
-  "name": "@basket/use-global-state",
+  "name": "use-common-state",
   "version": "0.0.0-development",
   "description": "React global state management hook",
   "main": "useGlobalState.js",
