@@ -1,7 +1,6 @@
-# use-global-state
+# use-common-state
 
-![.github/workflows/release.yml](https://github.com/borovin/use-global-state/workflows/.github/workflows/release.yml/badge.svg)
-[![Codecov](https://codecov.io/gh/borovin/use-global-state/branch/master/graph/badge.svg)](https://codecov.io/gh/borovin/use-global-state)
-[![Codacy](https://api.codacy.com/project/badge/Grade/cc207e48bf554af69e9e5910f8a944c9)](https://app.codacy.com/manual/borovin/use-global-state)
+Cross-component shared state management without context.
 
-In progress
+## Why?
+Current implementations of the React state management seems to be overcomplicated and redundant for most of the regular web apps. A lot of boilerplate/configuration code needs to be written before getting and updating common state. Thanks to the incredibly elegant `useState()` hook the mechanism of synchronizing local component states can be significantly simplified and doesn't require any additional code outside the component. It also makes components more reusable across different applications since there are no additional requirements to the app architecture and no needs in the top context providers.

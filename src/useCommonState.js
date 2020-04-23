@@ -6,24 +6,24 @@ import {
   set, get, toPath,
 } from 'lodash';
 
-let globalState = {};
+let commonState = {};
 export const localStateSetters = new Map();
 const pathToString = (normalizedPath) => JSON.stringify(normalizedPath);
 const pathToArray = (stringifiedPath) => JSON.parse(stringifiedPath);
 
-export function initGlobalState(initialState) {
-  globalState = initialState;
+export function initCommonState(initialState) {
+  commonState = initialState;
 }
 
-export function setGlobalState(path, updater) {
+export function setCommonState(path, updater) {
   const normalizedPath = toPath(path);
   const stringifiedPath = pathToString(normalizedPath);
-  const newState = typeof updater === 'function' ? updater(get(globalState, normalizedPath)) : updater;
-  set(globalState, normalizedPath, newState);
+  const newState = typeof updater === 'function' ? updater(get(commonState, normalizedPath)) : updater;
+  set(commonState, normalizedPath, newState);
   localStateSetters.forEach((setterPath, setter) => {
     if (setterPath.includes(stringifiedPath.slice(0, -1))
     || stringifiedPath.includes(setterPath.slice(0, -1))) {
-      const state = get(globalState, pathToArray(setterPath));
+      const state = get(commonState, pathToArray(setterPath));
       setter(state);
     }
   });
@@ -43,10 +43,10 @@ function useGlobalState(path, defaultValue) {
   }, [stringifiedPath]);
 
   const setState = useCallback((updater) => {
-    setGlobalState(normalizedPath, updater);
+    setCommonState(normalizedPath, updater);
   }, [stringifiedPath]);
 
-  return [get(globalState, normalizedPath, defaultValue), setState];
+  return [get(commonState, normalizedPath, defaultValue), setState];
 }
 
 export default useGlobalState;
