@@ -2,7 +2,7 @@
   "name": "use-common-state",
   "version": "0.0.0-development",
   "description": "React global state management hook",
-  "main": "useGlobalState.js",
+  "main": "useCommonState.js",
   "scripts": {
     "test": "jest",
     "coverage": "npm run test -- --coverage",
