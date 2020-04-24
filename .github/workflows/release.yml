@@ -1,10 +1,11 @@
-name: Release
+name: release
 on:
   push:
     paths:
     - 'src/**/*.js'
     - 'package.json'
     - 'babel.config.js'
+    - 'README.md'
 env:
   CI: true
   node_version: 12
