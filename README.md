@@ -1,4 +1,4 @@
-# use-global-state
+# use-common-state
 
 ![Release](https://github.com/borovin/use-common-state/workflows/Release/badge.svg)
 [![codecov](https://codecov.io/gh/borovin/use-common-state/branch/master/graph/badge.svg)](https://codecov.io/gh/borovin/use-common-state)
