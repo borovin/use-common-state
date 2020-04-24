@@ -1,30 +1,36 @@
 import { mount } from 'enzyme';
 import React, { useEffect } from 'react';
 import { act } from 'react-dom/test-utils';
-import useGlobalState, {
-  initGlobalState,
-  setGlobalState,
+import useCommonState, {
+  initCommonState,
+  setCommonState,
   localStateSetters,
-} from './useGlobalState';
+} from '../src/useCommonState';
 
 const UserName1 = (props) => {
   const { userId } = props;
-  const [firstName] = useGlobalState(['users', userId, 'firstName']);
-  const [lastName] = useGlobalState(`users.${userId}.lastName`);
+  const [firstName] = useCommonState(
+    ['users', userId, 'firstName'],
+    'defaultFirstName',
+  );
+  const [lastName] = useCommonState(
+    `users.${userId}.lastName`,
+    'defaultLastName',
+  );
 
   return `${firstName} ${lastName}`;
 };
 
 const UserName2 = (props) => {
   const { userId } = props;
-  const [user] = useGlobalState(['users', userId]);
+  const [user] = useCommonState(['users', userId]);
 
   return `${user.firstName} ${user.lastName}`;
 };
 
 const UserName3 = (props) => {
   const { userId } = props;
-  const [user, setUser] = useGlobalState(['users', userId]);
+  const [user, setUser] = useCommonState(['users', userId]);
 
   useEffect(() => {
     setUser({
@@ -38,7 +44,7 @@ const UserName3 = (props) => {
 
 describe('useGlobalState hook', () => {
   beforeEach(() => {
-    initGlobalState({
+    initCommonState({
       users: [
         {
           firstName: 'Steve',
@@ -57,30 +63,13 @@ describe('useGlobalState hook', () => {
   });
 
   it('should render initial state', () => {
-    initGlobalState({
-      users: [
-        {
-          firstName: 'Tony',
-          lastName: 'Stark',
-        },
-        {
-          firstName: 'Carol',
-          lastName: 'Danvers',
-        },
-        {
-          firstName: 'Natasha',
-          lastName: 'Romanov',
-        },
-      ],
-    });
-
     const userName = mount(<UserName1 userId={0} />);
 
     expect(userName).toMatchInlineSnapshot(`
       <UserName1
         userId={0}
       >
-        Tony Stark
+        Steve Rogers
       </UserName1>
     `);
 
@@ -91,8 +80,8 @@ describe('useGlobalState hook', () => {
     const userName = mount(<UserName1 userId={0} />);
 
     act(() => {
-      setGlobalState(['users', 0, 'firstName'], 'Bruce');
-      setGlobalState('users.0.lastName', () => 'Banner');
+      setCommonState(['users', 0, 'firstName'], 'Bruce');
+      setCommonState('users.0.lastName', () => 'Banner');
     });
 
     userName.update();
@@ -112,7 +101,7 @@ describe('useGlobalState hook', () => {
     const userName = mount(<UserName1 userId={0} />);
 
     act(() => {
-      setGlobalState(['users', 0], {
+      setCommonState(['users', 0], {
         firstName: 'Bruce',
         lastName: 'Banner',
       });
@@ -149,7 +138,7 @@ describe('useGlobalState hook', () => {
     const userName = mount(<UserName2 userId={0} />);
 
     act(() => {
-      setGlobalState(['users', 0], {
+      setCommonState(['users', 0], {
         firstName: 'Bruce',
         lastName: 'Banner',
       });
@@ -172,7 +161,7 @@ describe('useGlobalState hook', () => {
     const userName = mount(<UserName2 userId={0} />);
 
     act(() => {
-      setGlobalState(['users', 0, 'firstName'], 'Bruce');
+      setCommonState(['users', 0, 'firstName'], 'Bruce');
     });
 
     userName.update();
@@ -268,5 +257,19 @@ describe('useGlobalState hook', () => {
         Tony Stark
       </UserName3>
     `);
+  });
+
+  it('should render default state value', () => {
+    const userName = mount(<UserName1 userId={10} />);
+
+    expect(userName).toMatchInlineSnapshot(`
+      <UserName1
+        userId={10}
+      >
+        defaultFirstName defaultLastName
+      </UserName1>
+    `);
+
+    userName.unmount();
   });
 });
