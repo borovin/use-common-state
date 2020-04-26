@@ -18,8 +18,15 @@ export function initCommonState(initialState) {
 export function setCommonState(path, updater) {
   const normalizedPath = toPath(path);
   const stringifiedPath = pathToString(normalizedPath);
+  const prevState = get(commonState, normalizedPath);
   const newState = typeof updater === 'function' ? updater(get(commonState, normalizedPath)) : updater;
+
+  if (prevState === newState) {
+    return;
+  }
+
   set(commonState, normalizedPath, newState);
+
   localStateSetters.forEach((setterPath, setter) => {
     if (setterPath.includes(stringifiedPath.slice(0, -1))
     || stringifiedPath.includes(setterPath.slice(0, -1))) {
