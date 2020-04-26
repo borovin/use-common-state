@@ -7,6 +7,11 @@ import useCommonState, {
   localStateSetters,
 } from '../src/useCommonState';
 
+const userName1Render = jest.fn();
+const userName2Render = jest.fn();
+let userName1;
+let userName2;
+
 const UserName1 = (props) => {
   const { userId } = props;
   const [firstName] = useCommonState(
@@ -17,14 +22,14 @@ const UserName1 = (props) => {
     `users.${userId}.lastName`,
     'defaultLastName',
   );
-
+  userName1Render();
   return `${firstName} ${lastName}`;
 };
 
 const UserName2 = (props) => {
   const { userId } = props;
   const [user] = useCommonState(['users', userId]);
-
+  userName2Render();
   return `${user.firstName} ${user.lastName}`;
 };
 
@@ -42,7 +47,7 @@ const UserName3 = (props) => {
   return `${user.firstName} ${user.lastName}`;
 };
 
-describe('useGlobalState hook', () => {
+describe('useCommonState hook', () => {
   beforeEach(() => {
     initCommonState({
       users: [
@@ -60,12 +65,25 @@ describe('useGlobalState hook', () => {
         },
       ],
     });
+
+    userName1Render.mockClear();
+    userName2Render.mockClear();
+
+    userName1 = mount(<UserName1 userId={0} />);
+    userName2 = mount(<UserName2 userId={0} />);
+  });
+
+  afterEach(() => {
+    if (userName1.length) {
+      userName1.unmount();
+    }
+    if (userName2.length) {
+      userName2.unmount();
+    }
   });
 
   it('should render initial state', () => {
-    const userName = mount(<UserName1 userId={0} />);
-
-    expect(userName).toMatchInlineSnapshot(`
+    expect(userName1).toMatchInlineSnapshot(`
       <UserName1
         userId={0}
       >
@@ -73,20 +91,25 @@ describe('useGlobalState hook', () => {
       </UserName1>
     `);
 
-    userName.unmount();
+    expect(userName2).toMatchInlineSnapshot(`
+      <UserName2
+        userId={0}
+      >
+        Steve Rogers
+      </UserName2>
+    `);
   });
 
-  it('should render updated state', () => {
-    const userName = mount(<UserName1 userId={0} />);
-
+  it('should render updated fields', () => {
     act(() => {
       setCommonState(['users', 0, 'firstName'], 'Bruce');
       setCommonState('users.0.lastName', () => 'Banner');
     });
 
-    userName.update();
+    userName1.update();
+    userName2.update();
 
-    expect(userName).toMatchInlineSnapshot(`
+    expect(userName1).toMatchInlineSnapshot(`
       <UserName1
         userId={0}
       >
@@ -94,93 +117,58 @@ describe('useGlobalState hook', () => {
       </UserName1>
     `);
 
-    userName.unmount();
+    expect(userName2).toMatchInlineSnapshot(`
+      <UserName2
+        userId={0}
+      >
+        Bruce Banner
+      </UserName2>
+    `);
   });
 
-  it('should render updated top state', () => {
-    const userName = mount(<UserName1 userId={0} />);
-
+  it('should render updated parent fields', () => {
     act(() => {
-      setCommonState(['users', 0], {
-        firstName: 'Bruce',
-        lastName: 'Banner',
-      });
+      setCommonState('users', [
+        {
+          firstName: 'Natasha',
+          lastName: 'Romanov',
+        },
+      ]);
     });
 
-    userName.update();
+    userName1.update();
+    userName2.update();
 
-    expect(userName).toMatchInlineSnapshot(`
+    expect(userName1).toMatchInlineSnapshot(`
       <UserName1
         userId={0}
       >
-        Bruce Banner
+        Natasha Romanov
       </UserName1>
     `);
 
-    userName.unmount();
-  });
-
-  it('should render nested state', () => {
-    const userName = mount(<UserName2 userId={0} />);
-
-    expect(userName).toMatchInlineSnapshot(`
+    expect(userName2).toMatchInlineSnapshot(`
       <UserName2
         userId={0}
       >
-        Steve Rogers
+        Natasha Romanov
       </UserName2>
     `);
-
-    userName.unmount();
   });
 
-  it('should render updated nested state', () => {
-    const userName = mount(<UserName2 userId={0} />);
-
+  it('should not render unchaged fields', () => {
     act(() => {
-      setCommonState(['users', 0], {
-        firstName: 'Bruce',
-        lastName: 'Banner',
-      });
+      setCommonState(['users', 0, 'firstName'], 'Steve');
     });
 
-    userName.update();
+    userName1.update();
+    userName2.update();
 
-    expect(userName).toMatchInlineSnapshot(`
-      <UserName2
-        userId={0}
-      >
-        Bruce Banner
-      </UserName2>
-    `);
-
-    userName.unmount();
-  });
-
-  it('should render updated nested state field', () => {
-    const userName = mount(<UserName2 userId={0} />);
-
-    act(() => {
-      setCommonState(['users', 0, 'firstName'], 'Bruce');
-    });
-
-    userName.update();
-
-    expect(userName).toMatchInlineSnapshot(`
-      <UserName2
-        userId={0}
-      >
-        Bruce Rogers
-      </UserName2>
-    `);
-
-    userName.unmount();
+    expect(userName1Render).toBeCalledTimes(1);
+    expect(userName2Render).toBeCalledTimes(1);
   });
 
   it('should render updated props', () => {
-    const userName1 = mount(<UserName1 userId={0} />);
-    const userName2 = mount(<UserName2 userId={0} />);
-
     userName1.setProps({ userId: 2 });
     userName2.setProps({ userId: 2 });
 
@@ -198,59 +186,49 @@ describe('useGlobalState hook', () => {
         Natasha Romanov
       </UserName2>
     `);
-
-    userName1.unmount();
-    userName2.unmount();
   });
 
   it('should remove local setter on unmount', () => {
-    const userName = mount(<UserName1 userId={0} />);
-
-    userName.unmount();
+    userName1.unmount();
+    userName2.unmount();
 
     expect(localStateSetters).toMatchInlineSnapshot('Map {}');
   });
 
   it('should remove local setter on path change', () => {
-    const userName = mount(<UserName1 userId={0} />);
-
-    userName.setProps({ userId: 2 });
+    userName1.setProps({ userId: 2 });
 
     expect(localStateSetters).toMatchInlineSnapshot(`
       Map {
         [Function] => "[\\"users\\",\\"2\\",\\"firstName\\"]",
         [Function] => "[\\"users\\",\\"2\\",\\"lastName\\"]",
+        [Function] => "[\\"users\\",\\"0\\"]",
       }
     `);
-
-    userName.unmount();
   });
 
   it('should not remove local setter on prop change', () => {
-    const userName = mount(<UserName1 userId={0} label="test_label_1" />);
-
-    userName.setProps({ label: 'test_label_2' });
+    userName1.setProps({ label: 'test_label_2' });
 
     expect(localStateSetters).toMatchInlineSnapshot(`
       Map {
         [Function] => "[\\"users\\",\\"0\\",\\"firstName\\"]",
         [Function] => "[\\"users\\",\\"0\\",\\"lastName\\"]",
+        [Function] => "[\\"users\\",\\"0\\"]",
       }
     `);
-
-    userName.unmount();
   });
 
-  it('should update global state on mount', () => {
-    let userName;
+  it('should update state on mount', () => {
+    let userName3;
 
     act(() => {
-      userName = mount(<UserName3 userId={0} />);
+      userName3 = mount(<UserName3 userId={0} />);
     });
 
-    userName.update();
+    userName3.update();
 
-    expect(userName).toMatchInlineSnapshot(`
+    expect(userName3).toMatchInlineSnapshot(`
       <UserName3
         userId={0}
       >
