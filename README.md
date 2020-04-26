@@ -15,3 +15,10 @@ Current implementations of the React state management seem to be overcomplicated
 * https://codesandbox.io/s/use-common-state-1-p0gp6
 * https://codesandbox.io/s/use-common-state-2-ugcgi
 * https://codesandbox.io/s/use-common-state-3-hk46l
+
+## Install
+```
+npm install use-common-state
+```
+
+
