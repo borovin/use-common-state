@@ -1,8 +1,10 @@
 # use-common-state
 
 ![build](https://github.com/borovin/use-common-state/workflows/build/badge.svg)
+![review](https://github.com/borovin/use-common-state/workflows/review/badge.svg)
 [![codecov](https://codecov.io/gh/borovin/use-common-state/branch/master/graph/badge.svg)](https://codecov.io/gh/borovin/use-common-state)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/81b8beba838242558dfea2ba8f0276a1)](https://www.codacy.com/manual/borovin/use-global-state?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=borovin/use-global-state&amp;utm_campaign=Badge_Grade)
+[![Code style airbnb](https://img.shields.io/badge/code%20style-airbnb-blue)](https://github.com/airbnb/javascript/tree/master/react)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
