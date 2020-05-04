@@ -1,4 +1,4 @@
-name: release
+name: build
 on:
   push:
     paths:
@@ -10,11 +10,8 @@ env:
   CI: true
   node_version: 12
 jobs:
-  release:
+  test:
     runs-on: ubuntu-latest
-    env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
@@ -26,4 +23,23 @@ jobs:
         key: ${{ runner.os }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
     - run: npm ci
     - run: npm test
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: "0"
+    - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+    - uses: actions/setup-node@v1
+      with:
+        node-version: ${{ env.node_version }}
+    - uses: actions/cache@v1
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+    - run: npm ci
     - run: npm run release
