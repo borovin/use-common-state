@@ -19,18 +19,24 @@ export function createCommonState(initialState = {}) {
 
   commonStates[commonStateId] = initialState;
 
-  function setCommonState(path, updater) {
+  function setCommonState(_path, _updater) {
+    const updater = _updater || _path;
+    const path = _updater ? _path : null;
     const commonState = commonStates[commonStateId];
     const normalizedPath = toPath(path);
     const stringifiedPath = pathToString(normalizedPath);
-    const prevState = get(commonState, normalizedPath);
-    const newState = typeof updater === 'function' ? updater(get(commonState, normalizedPath)) : updater;
+    const prevState = normalizedPath.length ? get(commonState, normalizedPath) : commonState;
+    const newState = typeof updater === 'function' ? updater(prevState) : updater;
 
     if (prevState === newState) {
       return;
     }
 
-    set(commonState, normalizedPath, newState);
+    if (normalizedPath.length) {
+      set(commonState, normalizedPath, newState);
+    } else {
+      commonStates[commonStateId] = newState;
+    }
 
     localStateSetters.forEach((setterPath, setter) => {
       if (setterPath.includes(stringifiedPath.slice(0, -1))
@@ -59,7 +65,8 @@ export function createCommonState(initialState = {}) {
       setCommonState(normalizedPath, updater);
     }, [stringifiedPath]);
 
-    return [get(commonState, normalizedPath, defaultValue), setState];
+    return [normalizedPath.length
+      ? get(commonState, normalizedPath, defaultValue) : commonState, setState];
   }
 
   return [useCommonState, setCommonState];

@@ -219,12 +219,43 @@ describe('useCommonState hook', () => {
 
     userName.unmount();
   });
+
+  it('should render full state update', () => {
+    act(() => {
+      setCommonState({
+        users: [
+          {
+            firstName: 'Natasha',
+            lastName: 'Romanov',
+          },
+        ],
+      });
+    });
+
+    userName1.update();
+    userName2.update();
+
+    expect(userName1).toMatchInlineSnapshot(`
+      <UserName1
+        userId={0}
+      >
+        Natasha Romanov
+      </UserName1>
+    `);
+    expect(userName2).toMatchInlineSnapshot(`
+      <UserName2
+        userId={0}
+      >
+        Natasha Romanov
+      </UserName2>
+    `);
+  });
 });
 
 describe('createCommonState', () => {
   const guardianNicknameRender = jest.fn();
   const avengerNameRender = jest.fn();
-  let avangerName;
+  let avengerName;
   let guardianNickname;
   let useAvengers;
   let setAvengers;
@@ -281,13 +312,13 @@ describe('createCommonState', () => {
     guardianNicknameRender.mockClear();
     avengerNameRender.mockClear();
 
-    avangerName = mount(<AvengerName id={0} />);
+    avengerName = mount(<AvengerName id={0} />);
     guardianNickname = mount(<GuardianNickname id={0} />);
   });
 
   afterEach(() => {
-    if (avangerName.length) {
-      avangerName.unmount();
+    if (avengerName.length) {
+      avengerName.unmount();
     }
     if (guardianNickname.length) {
       guardianNickname.unmount();
@@ -295,7 +326,7 @@ describe('createCommonState', () => {
   });
 
   it('should render initial state', () => {
-    expect(avangerName).toMatchInlineSnapshot(`
+    expect(avengerName).toMatchInlineSnapshot(`
       <AvengerName
         id={0}
       >
@@ -319,10 +350,10 @@ describe('createCommonState', () => {
       setGuardians([0, 'nickname'], 'Rocket');
     });
 
-    avangerName.update();
+    avengerName.update();
     guardianNickname.update();
 
-    expect(avangerName).toMatchInlineSnapshot(`
+    expect(avengerName).toMatchInlineSnapshot(`
       <AvengerName
         id={0}
       >
@@ -350,10 +381,10 @@ describe('createCommonState', () => {
       });
     });
 
-    avangerName.update();
+    avengerName.update();
     guardianNickname.update();
 
-    expect(avangerName).toMatchInlineSnapshot(`
+    expect(avengerName).toMatchInlineSnapshot(`
       <AvengerName
         id={0}
       >
@@ -376,7 +407,7 @@ describe('createCommonState', () => {
       setGuardians([0, 'nickname'], 'Star-Lord');
     });
 
-    avangerName.update();
+    avengerName.update();
     guardianNickname.update();
 
     expect(guardianNicknameRender).toBeCalledTimes(1);
@@ -384,10 +415,10 @@ describe('createCommonState', () => {
   });
 
   it('should render updated props', () => {
-    avangerName.setProps({ id: 2 });
+    avengerName.setProps({ id: 2 });
     guardianNickname.setProps({ id: 2 });
 
-    expect(avangerName).toMatchInlineSnapshot(`
+    expect(avengerName).toMatchInlineSnapshot(`
       <AvengerName
         id={2}
       >
@@ -404,9 +435,9 @@ describe('createCommonState', () => {
   });
 
   it('should render default state value', () => {
-    const avengerName = mount(<AvengerName id={10} />);
+    const name = mount(<AvengerName id={10} />);
 
-    expect(avengerName).toMatchInlineSnapshot(`
+    expect(name).toMatchInlineSnapshot(`
       <AvengerName
         id={10}
       >
@@ -414,6 +445,40 @@ describe('createCommonState', () => {
       </AvengerName>
     `);
 
-    avengerName.unmount();
+    name.unmount();
+  });
+
+  it('should render full state update', () => {
+    act(() => {
+      setAvengers([
+        {
+          firstName: 'Natasha',
+          lastName: 'Romanov',
+        },
+      ]);
+      setGuardians([
+        {
+          nickname: 'Groot',
+        },
+      ]);
+    });
+
+    avengerName.update();
+    guardianNickname.update();
+
+    expect(avengerName).toMatchInlineSnapshot(`
+      <AvengerName
+        id={0}
+      >
+        Natasha Romanov
+      </AvengerName>
+    `);
+    expect(guardianNickname).toMatchInlineSnapshot(`
+      <GuardianNickname
+        id={0}
+      >
+        Groot
+      </GuardianNickname>
+    `);
   });
 });
