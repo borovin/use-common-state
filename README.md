@@ -33,7 +33,7 @@ It's recomended, but not mandatory to specify the state property you need, so th
 `useCommonState` function has similar syntax to the [lodash get()](https://lodash.com/docs/4.17.15#get). The first argument is the path of the state property to get (Array|string). 
 The second is the value returned for undefined resolved values (default value). And returns the array of `[value, setter]` similar to the regular [React useState hook](https://reactjs.org/docs/hooks-state.html). You can get get/set the common state properties in any component, no matter where it's placed in the components tree. See the full example here: https://codesandbox.io/s/use-common-state-1-p0gp6
 
-It's also possible to update the common state outside the component, which is handy for global actions like fetching data:
+It's also possible to update the common state outside the component, which is handy for global actions like fetching/initializing data:
 ```
 import React from "react";
 import { setCommonState } from "use-common-state";
@@ -64,5 +64,12 @@ function Page() {
 }
 ```
 See the full example here: https://codesandbox.io/s/use-common-state-2-ugcgi
+
+## Advanced usage
+In complex apps when managing huge data structures and working with different APIs you will likely need to split monolithic common state into small independent parts.
+It could help you to avoid naming collisions, code conflicts and share different common states as an independent modules. In this case you can use `createCommonState` fabric function
+which returns the array of `[useCommonStateHook, commonStateSetter]`:
+```
+```
 
 

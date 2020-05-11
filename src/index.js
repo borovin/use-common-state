@@ -46,7 +46,10 @@ export function createCommonState(initialState = {}) {
   function useCommonState(path, defaultValue) {
     const normalizedPath = toPath(path);
     const stringifiedPath = pathToString(normalizedPath);
-    const localStateSetter = useState()[1];
+    const value = normalizedPath.length
+      ? get(commonStates[commonStateId], normalizedPath, defaultValue)
+      : commonStates[commonStateId];
+    const localStateSetter = useState(value)[1];
 
     useEffect(() => function cleanup() {
       localStateSetters.delete(localStateSetter);
@@ -60,9 +63,7 @@ export function createCommonState(initialState = {}) {
       setCommonState(normalizedPath, updater);
     }, [stringifiedPath]);
 
-    return [normalizedPath.length
-      ? get(commonStates[commonStateId], normalizedPath, defaultValue)
-      : commonStates[commonStateId], setState];
+    return [value, setState];
   }
 
   return [useCommonState, setCommonState];
