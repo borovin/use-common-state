@@ -12,7 +12,8 @@
     "prebuild": "rimraf build",
     "postbuild": "node ./scripts/setupRelease",
     "release": "cd ./build && npx semantic-release",
-    "prerelease": "npm run build"
+    "prerelease": "npm run build",
+    "examples": "next dev examples"
   },
   "author": "a@borovin.com",
   "license": "MIT",
@@ -37,6 +38,7 @@
     "eslint-plugin-react-hooks": "^2.5.1",
     "husky": "^4.2.5",
     "jest": "^25.4.0",
+    "next": "^9.4.0",
     "prettier": "^2.0.5",
     "react-dom": "^16.13.1",
     "semantic-release": "^17.0.7"

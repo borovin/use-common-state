@@ -1,8 +1,7 @@
 import { mount } from 'enzyme';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { act } from 'react-dom/test-utils';
 import useCommonState, {
-  initCommonState,
   setCommonState,
   createCommonState,
 } from '../src/index';
@@ -34,22 +33,8 @@ describe('useCommonState hook', () => {
     return `${user.firstName} ${user.lastName}`;
   };
 
-  const UserName3 = (props) => {
-    const { userId } = props;
-    const [user, setUser] = useCommonState(['users', userId]);
-
-    useEffect(() => {
-      setUser({
-        firstName: 'Tony',
-        lastName: 'Stark',
-      });
-    }, [setUser]);
-
-    return `${user.firstName} ${user.lastName}`;
-  };
-
   beforeEach(() => {
-    initCommonState({
+    setCommonState({
       users: [
         {
           firstName: 'Steve',
@@ -185,24 +170,6 @@ describe('useCommonState hook', () => {
       >
         Natasha Romanov
       </UserName2>
-    `);
-  });
-
-  it('should update state on mount', () => {
-    let userName3;
-
-    act(() => {
-      userName3 = mount(<UserName3 userId={0} />);
-    });
-
-    userName3.update();
-
-    expect(userName3).toMatchInlineSnapshot(`
-      <UserName3
-        userId={0}
-      >
-        Tony Stark
-      </UserName3>
     `);
   });
 
