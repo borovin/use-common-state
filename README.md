@@ -37,10 +37,11 @@ It's also possible to update the common state outside the component, which is ha
 ```
 import React from "react";
 import { setCommonState } from "use-common-state";
+import {FirstName, LastName, Input} from "../components";
 
 const fetchUser = () => {
   setCommonState({ isLoadingUser: true });
-  window.fetch('paht/to/user')
+  fetch("path/to/user")
     .then(res => res.json())
     .then(user => setCommonState({user, isLoadingUser: false}))
 };
@@ -66,10 +67,40 @@ function Page() {
 See the full example here: https://codesandbox.io/s/use-common-state-2-ugcgi
 
 ## Advanced usage
-In complex apps when managing huge data structures and working with different APIs you will likely need to split monolithic common state into small independent parts.
-It could help you to avoid naming collisions, code conflicts and share different common states as an independent modules. In this case you can use `createCommonState` fabric function
-which returns the array of `[useCommonStateHook, commonStateSetter]`:
+In complex web apps, when managing huge data structures and working with different APIs you will likely need to split monolithic common state into small independent parts.
+It could help you to avoid naming collisions, code conflicts, increase performance and share different common states as an independent modules. 
+For this case you can use `createCommonState` fabric function which returns the array of `[useCommonStateHook, commonStateSetter]`. The optional argument is initial common state value:
 ```
+import React from "react";
+import { createCommonState } from "use-common-state";
+import {FirstName, LastName, Input} from "../components";
+
+const [useUser, setUser] = createCommonState({
+  isLoading: true,
+});
+
+const fetchUser = () => {
+  setUser("isLoading", true);
+  fetch("path/to/user")
+    .then(res => res.json())
+    .then(user => setUser({...user, isLoading: false}))
+};
+
+function Page() {
+  const [isLoadingUser] = useUser("isLoading");
+
+  React.useEffect(() => {
+    fetchUser();
+  }, []);
+
+  return isLoadingUser ? (
+    "Loading user..."
+  ) : (
+    <>
+      <FirstName />
+      <LastName />
+      <Input />
+    </>
+  );
+}
 ```
-
-
