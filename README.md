@@ -46,7 +46,7 @@ const fetchUser = () => {
 };
 
 function Page() {
-  const [isLoadingUser] = useCommonState("isLoadingUser");
+  const [isLoadingUser] = useCommonState("isLoadingUser", true);
 
   React.useEffect(() => {
     fetchUser();
