@@ -2,16 +2,18 @@
   "name": "use-common-state",
   "version": "0.0.0-development",
   "description": "React global state management hook",
-  "main": "useCommonState.js",
+  "main": "index.js",
   "scripts": {
     "test": "jest",
     "coverage": "npm run test -- --coverage",
     "lint": "eslint .",
+    "fix": "eslint . --fix",
     "build": "babel ./src --out-dir ./build",
     "prebuild": "rimraf build",
     "postbuild": "node ./scripts/setupRelease",
     "release": "cd ./build && npx semantic-release",
-    "prerelease": "npm run build"
+    "prerelease": "npm run build",
+    "examples": "next dev examples"
   },
   "author": "a@borovin.com",
   "license": "MIT",
@@ -36,6 +38,9 @@
     "eslint-plugin-react-hooks": "^2.5.1",
     "husky": "^4.2.5",
     "jest": "^25.4.0",
+    "mobx": "^5.15.4",
+    "mobx-react-lite": "^2.0.6",
+    "next": "^9.4.0",
     "prettier": "^2.0.5",
     "react-dom": "^16.13.1",
     "semantic-release": "^17.0.7"

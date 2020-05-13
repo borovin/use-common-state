@@ -21,6 +21,8 @@ module.exports = {
     'jest'
   ],
   rules: {
-    'import/no-extraneous-dependencies': ['error', {devDependencies: ['jest.setup.js', '**/*.test.js', '**/*.test.jsx']}]
+    'import/no-extraneous-dependencies': ['error', {devDependencies: ['jest.setup.js', '**/*.test.js', '**/*.test.jsx']}],
+    'react-hooks/exhaustive-deps': 'warn',
+    'max-len': 'warn'
   }
 }
