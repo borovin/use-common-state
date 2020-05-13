@@ -18,20 +18,39 @@ npm install use-common-state
 ```
 
 ## Usage
-You can use common state hook inside your functional component without any additional wrappers nor setup:
+You can use common state hook inside your functional components without any additional wrappers nor setup:
 ```
 import React from "react";
 import useCommonState from "use-common-state";
 
-const FirstName = () => {
-  const [firstName, setFirstName] = useCommonState("user.firstName", "Default name");
+export const FirstName = () => {
+  const [firstName] = useCommonState("user.firstName", "Default first name");
 
   return <div>{firstName}</div>;
 };
+
+export const LastName = () => {
+  const [lastName] = useCommonState("user.lastName", "Default last name");
+
+  return <div>{lastName}</div>;
+};
+
+export const Input = () => {
+  const [firstName, setFirstName] = useCommonState("user.firstName");
+  const [lastName, setLastName] = useCommonState("user.lastName");
+
+  return (
+    <>
+      <input value={firstName} placeholder='First name' onChange={e => setFirstName(e.target.value)} />
+      <input value={lastName} placeholder='Last name' onChange={e => setLastName(e.target.value)} />
+    </>
+  );
+};
 ```
-It's recomended, but not mandatory to specify the state property you need, so the component will be rerendered only when this specific property is updated (reference identity is used). 
+It's recomended, but not mandatory, to specify the path of the common state property you need, 
+so the component will be rerendered only when this specific property is updated (reference identity is used). 
 `useCommonState` function has similar syntax to the [lodash get()](https://lodash.com/docs/4.17.15#get). The first argument is the path of the state property to get (Array|string). 
-The second is the value returned for undefined resolved values (default value). And returns the array of `[value, setter]` similar to the regular [React useState hook](https://reactjs.org/docs/hooks-state.html). You can get get/set the common state properties in any component, no matter where it's placed in the components tree. See the full example here: https://codesandbox.io/s/use-common-state-1-p0gp6
+The second is the value, returned for undefined resolved values (default value). And returns the array of `[value, setter]` similar to the original [React useState hook](https://reactjs.org/docs/hooks-state.html). You can get get/set the common state properties in any component, no matter where it's placed in the components tree. See the full example here: https://codesandbox.io/s/use-common-state-1-p0gp6
 
 It's also possible to update the common state outside the component, which is handy for global actions like fetching/initializing data:
 ```

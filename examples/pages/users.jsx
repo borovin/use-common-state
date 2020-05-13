@@ -62,13 +62,12 @@ const UserName = memo((props) => {
 
 const UserAddress = memo((props) => {
   const { userId } = props;
-  const [zip] = useCommonState(['users', userId, 'address', 'zip']);
-  const [street] = useCommonState(['users', userId, 'address', 'street']);
+  const [address] = useCommonState(['users', userId, 'address']);
 
   return (
     <div>
       <span>
-        {`${street} ${zip}`}
+        {`${address.street} ${address.zip}`}
         {' '}
       </span>
       <Time />

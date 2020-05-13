@@ -1,11 +1,6 @@
 import React from 'react';
 import useCommonState, { setCommonState } from '../../src';
 
-const user = {
-  firstName: 'Natasha',
-  lastName: 'Romanov',
-};
-
 setCommonState({
   isLoadingUser: true,
 });
@@ -13,61 +8,35 @@ setCommonState({
 const fetchUser = () => {
   setCommonState('isLoadingUser', true);
   setTimeout(() => {
+    const user = {
+      firstName: 'Natasha',
+      lastName: 'Romanov',
+    };
+
     setCommonState({ user, isLoadingUser: false });
   }, 3000);
 };
 
-const Time = () => {
-  const time = new Intl.DateTimeFormat(navigator.language, {
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-  }).format(Date.now());
-
-  return <span>{time}</span>;
-};
-
 const FirstName = () => {
-  const [firstName] = useCommonState('user.firstName', 'First name');
+  const [firstName] = useCommonState('user.firstName');
 
-  return (
-    <div>
-      {firstName}
-      {' '}
-      (updated:
-      {' '}
-      <Time />
-      )
-    </div>
-  );
+  return <div>{firstName}</div>;
 };
 
 const LastName = () => {
-  const [lastName] = useCommonState('user.lastName', 'Last name');
+  const [lastName] = useCommonState('user.lastName');
 
-  return (
-    <h1>
-      {lastName}
-      {' '}
-      (updated:
-      {' '}
-      <Time />
-      )
-    </h1>
-  );
+  return <div>{lastName}</div>;
 };
 
 const Input = () => {
-  const [user, setUser] = useCommonState('user', {});
-
-  const handleChange = (e) => {
-    const [firstName, lastName] = e.target.value.trim().split(' ');
-    setUser({ firstName, lastName });
-  };
+  const [firstName, setFirstName] = useCommonState('user.firstName');
+  const [lastName, setLastName] = useCommonState('user.lastName');
 
   return (
     <>
-      <input onChange={handleChange} placeholder="Change username here" />
+      <input value={firstName} placeholder="First name" onChange={(e) => setFirstName(e.target.value)} />
+      <input value={lastName} placeholder="Last name" onChange={(e) => setLastName(e.target.value)} />
     </>
   );
 };
