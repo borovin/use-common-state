@@ -56,7 +56,7 @@ It's also possible to update the common state outside the component, which is ha
 ```
 import React from "react";
 import { setCommonState } from "use-common-state";
-import {FirstName, LastName, Input} from "../components";
+import { FirstName, LastName, Input } from "../components";
 
 const fetchUser = () => {
   setCommonState("isLoadingUser", true);
@@ -92,7 +92,7 @@ For this purposes you can use `createCommonState` factory function which returns
 ```
 import React from "react";
 import { createCommonState } from "use-common-state";
-import {FirstName, LastName, Input} from "../components";
+import { FirstName, LastName, Input } from "../components";
 
 const [useUser, setUser] = createCommonState({
   isLoading: true,
