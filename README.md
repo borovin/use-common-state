@@ -67,9 +67,9 @@ function Page() {
 See the full example here: https://codesandbox.io/s/use-common-state-2-ugcgi
 
 ## Advanced usage
-In complex web apps, when managing huge data structures and working with different APIs you will likely need to split monolithic common state into small independent parts.
+In complex web apps, when managing huge data structures and working with different APIs you will likely think about splitting the monolithic common state into small independent parts.
 It could help you to avoid naming collisions, code conflicts, increase performance and share different common states as an independent modules. 
-For this case you can use `createCommonState` fabric function which returns the array of `[useCommonStateHook, commonStateSetter]`. The optional argument is initial common state value:
+For this purposes you can use `createCommonState` factory function which returns the array of `[useCommonStateHook, commonStateSetter]`. The optional argument is initial common state value:
 ```
 import React from "react";
 import { createCommonState } from "use-common-state";

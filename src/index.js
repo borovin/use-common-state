@@ -1,13 +1,17 @@
-import {
-  useState, useEffect, useCallback,
-} from 'react';
-import {
-  set, get, toPath,
-} from 'lodash';
+import { useState, useEffect, useCallback } from 'react';
+import _get from 'lodash/get';
+import _isNil from 'lodash/isNil';
+import _set from 'lodash/fp/set';
 
 const commonStates = [];
-const pathToString = (normalizedPath) => JSON.stringify(normalizedPath);
-const pathToArray = (stringifiedPath) => JSON.parse(stringifiedPath);
+
+function get(obj, path, defaultValue) {
+  return _isNil(path) ? obj : _get(obj, path, defaultValue);
+}
+
+function set(obj, path, value) {
+  return _isNil(path) ? value : _set(path)(value)(obj);
+}
 
 export function createCommonState(initialState = {}) {
   const commonStateId = commonStates.length;
@@ -16,39 +20,22 @@ export function createCommonState(initialState = {}) {
   commonStates[commonStateId] = initialState;
 
   function setCommonState(_path, _updater) {
-    const updater = _updater || _path;
     const path = _updater ? _path : null;
-    const normalizedPath = toPath(path);
-    const stringifiedPath = pathToString(normalizedPath);
-    const prevState = normalizedPath.length
-      ? get(commonStates[commonStateId], normalizedPath) : commonStates[commonStateId];
-    const newState = typeof updater === 'function' ? updater(prevState) : updater;
+    const updater = _updater || _path;
+    const prevValue = get(commonStates[commonStateId], path);
+    const newValue = typeof updater === 'function' ? updater(prevValue) : updater;
 
-    if (prevState === newState) {
+    if (prevValue === newValue) {
       return;
     }
 
-    if (normalizedPath.length) {
-      set(commonStates[commonStateId], normalizedPath, newState);
-    } else {
-      commonStates[commonStateId] = newState;
-    }
+    commonStates[commonStateId] = set(commonStates[commonStateId], path, newValue);
 
-    localStateSetters.forEach((setterPath, localStateSetter) => {
-      if (setterPath.includes(stringifiedPath.slice(0, -1))
-      || stringifiedPath.includes(setterPath.slice(0, -1))) {
-        const state = get(commonStates[commonStateId], pathToArray(setterPath));
-        localStateSetter(state);
-      }
-    });
+    localStateSetters.forEach((localStatePath, localStateSetter) => localStateSetter(get(commonStates[commonStateId], localStatePath)));
   }
 
   function useCommonState(path, defaultValue) {
-    const normalizedPath = toPath(path);
-    const stringifiedPath = pathToString(normalizedPath);
-    const value = normalizedPath.length
-      ? get(commonStates[commonStateId], normalizedPath, defaultValue)
-      : commonStates[commonStateId];
+    const value = get(commonStates[commonStateId], path, defaultValue);
     const localStateSetter = useState(value)[1];
 
     useEffect(() => function cleanup() {
@@ -56,12 +43,12 @@ export function createCommonState(initialState = {}) {
     }, []);
 
     useEffect(() => {
-      localStateSetters.set(localStateSetter, stringifiedPath);
-    }, [stringifiedPath]);
+      localStateSetters.set(localStateSetter, path);
+    }, [path, localStateSetter]);
 
     const setState = useCallback((updater) => {
-      setCommonState(normalizedPath, updater);
-    }, [stringifiedPath]);
+      setCommonState(path, updater);
+    }, [path]);
 
     return [value, setState];
   }
