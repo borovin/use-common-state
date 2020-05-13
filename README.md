@@ -59,7 +59,7 @@ import { setCommonState } from "use-common-state";
 import {FirstName, LastName, Input} from "../components";
 
 const fetchUser = () => {
-  setCommonState({ isLoadingUser: true });
+  setCommonState("isLoadingUser", true);
   fetch("path/to/user")
     .then(res => res.json())
     .then(user => setCommonState({user, isLoadingUser: false}))
