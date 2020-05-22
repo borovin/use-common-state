@@ -2,53 +2,54 @@ import { useState, useEffect, useCallback } from 'react';
 
 const commonStates = [];
 
-function isNil(value) {
-  return typeof value === 'undefined' || value === null;
-}
-
 function pathToArray(path) {
-  switch (typeof path) {
-    case 'string':
-      return path.split('.');
-    case 'number':
-      return [path];
-    default:
-      return path;
+  if (Array.isArray(path)) {
+    return path;
   }
+
+  if (typeof path === 'string') {
+    return path.split('.');
+  }
+
+  if (typeof path === 'number') {
+    return [path];
+  }
+
+  return [];
 }
 
-function get(obj, path, defaultValue) {
-  if (isNil(path)) {
+function get(obj, pathArray = [], defaultValue) {
+  if (!pathArray.length) {
     return obj;
   }
 
-  const pathArray = pathToArray(path);
-
   const value = pathArray.slice().reduce((nested, key, i, arr) => {
-    const result = nested[key];
-    if (result === null || typeof result === 'undefined') {
-      arr.splice(1);
+    let result;
+
+    if (nested !== null) {
+      result = nested[key];
     }
-    return result || defaultValue;
+
+    if (typeof result === 'undefined') {
+      arr.splice(1);
+      return defaultValue;
+    }
+
+    return result;
   }, obj);
 
   return value;
 }
 
-function set(obj, path, value) {
-  if (isNil(path)) {
-    return value;
-  }
-
-  const pathArray = pathToArray(path);
-
+function set(obj, pathArray = [], value) {
   if (!pathArray.length) {
     return value;
   }
 
-  const result = Array.isArray(obj) ? obj.slice() : { ...obj };
+  const key = pathArray[0];
+  const result = Array.isArray(obj) ? obj.slice() : Object.assign({}, obj);
 
-  result[pathArray[0]] = set(result[pathArray[0]], pathArray.slice(1), value);
+  result[key] = set(result[key], pathArray.slice(1), value);
 
   return result;
 }
@@ -59,23 +60,25 @@ export function createCommonState(initialState = {}) {
 
   commonStates[commonStateId] = initialState;
 
-  function setCommonState(_path, _updater) {
-    const path = _updater ? _path : null;
-    const updater = _updater || _path;
-    const prevValue = get(commonStates[commonStateId], path);
+  function setCommonState(path, value) {
+    const pathArray = value ? pathToArray(path) : [];
+    const updater = value || path;
+    const prevValue = get(commonStates[commonStateId], pathArray);
     const newValue = typeof updater === 'function' ? updater(prevValue) : updater;
 
     if (prevValue === newValue) {
       return;
     }
 
-    commonStates[commonStateId] = set(commonStates[commonStateId], path, newValue);
+    commonStates[commonStateId] = set(commonStates[commonStateId], pathArray, newValue);
 
     localStateSetters.forEach((localStatePath, localStateSetter) => localStateSetter(get(commonStates[commonStateId], localStatePath)));
   }
 
   function useCommonState(path, defaultValue) {
-    const value = get(commonStates[commonStateId], path, defaultValue);
+    const pathArray = pathToArray(path);
+    const pathString = JSON.stringify(pathArray);
+    const value = get(commonStates[commonStateId], pathArray, defaultValue);
     const localStateSetter = useState(value)[1];
 
     useEffect(() => function cleanup() {
@@ -83,12 +86,12 @@ export function createCommonState(initialState = {}) {
     }, []);
 
     useEffect(() => {
-      localStateSetters.set(localStateSetter, path);
-    }, [path, localStateSetter]);
+      localStateSetters.set(localStateSetter, pathArray);
+    }, [pathString, localStateSetter]);
 
     const setState = useCallback((updater) => {
-      setCommonState(path, updater);
-    }, [path]);
+      setCommonState(pathArray, updater);
+    }, [pathString]);
 
     return [value, setState];
   }
