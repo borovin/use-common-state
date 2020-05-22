@@ -11,7 +11,7 @@ Cross-component common state hook without context providers.
 
 * **Super-small.** 490 bytes (minified and gzipped). No dependencies.
 * **Performance-friendly.** Component renders only when required data is changed.
-* **Boilerplate-free.** No wrappers, mappers, providers, etc... Simple React hook without context.
+* **Boilerplate-free.** No wrappers, mappers, providers, subscribers, etc... Simple React State Hook without context.
 
 ## Why?
 Current implementations of the React state management seem to be overcomplicated and redundant for most of the regular web apps. A lot of boilerplate/configuration code needs to be written before getting and updating common state. Thanks to the incredibly elegant `useState()` hook, the mechanism of synchronizing local component states can be significantly simplified and doesn't require any additional code outside the functional component. It also makes components more reusable across different applications since there are no additional requirements to the app architecture and no needs in the top context providers.
