@@ -4,6 +4,7 @@
   "description": "React global state management hook",
   "main": "index.js",
   "scripts": {
+    "size": "npm run build && size-limit",
     "test": "jest",
     "coverage": "npm run test -- --coverage",
     "lint": "eslint .",
@@ -22,6 +23,7 @@
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.0",
     "@babel/preset-react": "^7.9.4",
+    "@size-limit/preset-small-lib": "^4.5.0",
     "@types/jest": "^25.1.4",
     "babel-jest": "^25.4.0",
     "commitizen": "^4.0.4",
@@ -43,10 +45,11 @@
     "next": "^9.4.0",
     "prettier": "^2.0.5",
     "react-dom": "^16.13.1",
-    "semantic-release": "^17.0.7"
+    "semantic-release": "^17.0.7",
+    "size-limit": "^4.5.0"
   },
   "dependencies": {
-    "lodash": "^4.17.15",
+    "dot-prop-immutable": "^2.1.0",
     "react": "^16.8.0"
   },
   "repository": {

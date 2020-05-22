@@ -1,16 +1,56 @@
 import { useState, useEffect, useCallback } from 'react';
-import _get from 'lodash/get';
-import _isNil from 'lodash/isNil';
-import _set from 'lodash/fp/set';
 
 const commonStates = [];
 
+function isNil(value) {
+  return typeof value === 'undefined' || value === null;
+}
+
+function pathToArray(path) {
+  switch (typeof path) {
+    case 'string':
+      return path.split('.');
+    case 'number':
+      return [path];
+    default:
+      return path;
+  }
+}
+
 function get(obj, path, defaultValue) {
-  return _isNil(path) ? obj : _get(obj, path, defaultValue);
+  if (isNil(path)) {
+    return obj;
+  }
+
+  const pathArray = pathToArray(path);
+
+  const value = pathArray.slice().reduce((nested, key, i, arr) => {
+    const result = nested[key];
+    if (result === null || typeof result === 'undefined') {
+      arr.splice(1);
+    }
+    return result || defaultValue;
+  }, obj);
+
+  return value;
 }
 
 function set(obj, path, value) {
-  return _isNil(path) ? value : _set(path)(value)(obj);
+  if (isNil(path)) {
+    return value;
+  }
+
+  const pathArray = pathToArray(path);
+
+  if (!pathArray.length) {
+    return value;
+  }
+
+  const result = Array.isArray(obj) ? obj.slice() : { ...obj };
+
+  result[pathArray[0]] = set(result[pathArray[0]], pathArray.slice(1), value);
+
+  return result;
 }
 
 export function createCommonState(initialState = {}) {
