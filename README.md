@@ -7,10 +7,14 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-Cross-component common state management without context.
+Cross-component common state hook without context providers.
+
+* **Super-small.** 490 bytes (minified and gzipped). No dependencies.
+* **Performance-friendly.** Component renders only when required data is changed.
+* **Boilerplate-free.** No wrappers, mappers, providers, etc... Simple React hook without context.
 
 ## Why?
-Current implementations of the React state management seem to be overcomplicated and redundant for most of the regular web apps. A lot of boilerplate/configuration code needs to be written before getting and updating common state. Thanks to the incredibly elegant `useState()` hook the mechanism of synchronizing local component states can be significantly simplified and doesn't require any additional code outside the component. It also makes components more reusable across different applications since there are no additional requirements to the app architecture and no needs in the top context providers.
+Current implementations of the React state management seem to be overcomplicated and redundant for most of the regular web apps. A lot of boilerplate/configuration code needs to be written before getting and updating common state. Thanks to the incredibly elegant `useState()` hook, the mechanism of synchronizing local component states can be significantly simplified and doesn't require any additional code outside the functional component. It also makes components more reusable across different applications since there are no additional requirements to the app architecture and no needs in the top context providers.
 
 ## Install
 ```
@@ -49,7 +53,7 @@ export const Input = () => {
 ```
 It's recomended, but not mandatory, to specify the path of the common state property you need, 
 so the component will be rerendered only when this specific property is updated (reference identity is used). 
-`useCommonState` function has similar syntax to the [lodash get()](https://lodash.com/docs/4.17.15#get). The first argument is the path of the state property to get (Array|string). 
+The first argument of the `useCommonState` is the path of the state property to get (Array|string). 
 The second is the value, returned for undefined resolved values (default value). And returns the array of `[value, setter]` similar to the original [React useState hook](https://reactjs.org/docs/hooks-state.html). You can get get/set the common state properties in any component, no matter where it's placed in the components tree. See the full example here: https://codesandbox.io/s/use-common-state-1-p0gp6
 
 It's also possible to update the common state outside the component, which is handy for global actions like fetching/initializing data:
