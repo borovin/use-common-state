@@ -47,7 +47,7 @@ function set(obj, pathArray = [], value) {
   }
 
   const key = pathArray[0];
-  const result = Array.isArray(obj) ? obj.slice() : Object.assign({}, obj);
+  const result = Array.isArray(obj) ? obj.slice() : ({ ...obj });
 
   result[key] = set(result[key], pathArray.slice(1), value);
 
@@ -61,8 +61,8 @@ export function createCommonState(initialState = {}) {
   commonStates[commonStateId] = initialState;
 
   function setCommonState(path, value) {
-    const pathArray = value ? pathToArray(path) : [];
-    const updater = value || path;
+    const pathArray = typeof value === 'undefined' ? [] : pathToArray(path);
+    const updater = typeof value === 'undefined' ? path : value;
     const prevValue = get(commonStates[commonStateId], pathArray);
     const newValue = typeof updater === 'function' ? updater(prevValue) : updater;
 
