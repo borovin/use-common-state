@@ -28,33 +28,42 @@ import React from "react";
 import useCommonState from "use-common-state";
 
 export const FirstName = () => {
-  const [firstName] = useCommonState("user.firstName", "Default first name");
+  const [firstName] = useCommonState("user.firstName");
 
   return <div>{firstName}</div>;
 };
 
 export const LastName = () => {
-  const [lastName] = useCommonState("user.lastName", "Default last name");
+  const [lastName] = useCommonState("user.lastName");
 
   return <div>{lastName}</div>;
 };
 
-export const Input = () => {
+export const FirstNameInput = () => {
   const [firstName, setFirstName] = useCommonState("user.firstName");
-  const [lastName, setLastName] = useCommonState("user.lastName");
 
   return (
     <>
       <input value={firstName} placeholder='First name' onChange={e => setFirstName(e.target.value)} />
+    </>
+  );
+};
+
+export const LastNameInput = () => {
+  const [lastName, setLastName] = useCommonState("user.lastName");
+
+  return (
+    <>
       <input value={lastName} placeholder='Last name' onChange={e => setLastName(e.target.value)} />
     </>
   );
 };
 ```
-It's recomended, but not mandatory, to specify the path of the common state property you need, 
+After that you can use these components at any place of your components tree.
+
+It's recomended, but not mandatory, to specify the path of the common state property you need as an argument of `useCommonState` hook, 
 so the component will be rerendered only when this specific property is updated (reference identity is used). 
-The first argument of the `useCommonState` is the path of the state property to get (Array|string). 
-The second is the value, returned for undefined resolved values (default value). And returns the array of `[value, setter]` similar to the original [React useState hook](https://reactjs.org/docs/hooks-state.html). You can get get/set the common state properties in any component, no matter where it's placed in the components tree. See the full example here: https://codesandbox.io/s/use-common-state-1-p0gp6
+The `useCommonState` hook returns an array of `[value, setter]` similar to the original [React useState hook](https://reactjs.org/docs/hooks-state.html). You can get get/set the common state properties in any component, no matter where it's placed in the components tree. See the full example here: https://codesandbox.io/s/use-common-state-1-p0gp6
 
 It's also possible to update the common state outside the component, which is handy for global actions like fetching/initializing data:
 ```
@@ -64,30 +73,39 @@ import { FirstName, LastName, Input } from "../components";
 
 const fetchUser = () => {
   setCommonState("isLoadingUser", true);
-  fetch("path/to/user")
-    .then(res => res.json())
-    .then(user => setCommonState({user, isLoadingUser: false}))
+  ajax("path/to/user/api")
+    .then(user => setCommonState({user}))
+    .catch(err => setCommonState("userError", err))
+    .finally(() => setCommonState("isLoadingUser", false));
 };
 
 function Page() {
-  const [isLoadingUser] = useCommonState("isLoadingUser", true);
+  const [isLoadingUser = true] = useCommonState("isLoadingUser");
+  const [userError] = useCommonState("userError");
 
   React.useEffect(() => {
     fetchUser();
   }, []);
 
-  return isLoadingUser ? (
-    "Loading user..."
-  ) : (
+  if (isLoadingUser) {
+    return "Loading user..."
+  }
+
+  if (userError) {
+    return userError.message
+  }
+
+  return (
     <>
       <FirstName />
       <LastName />
-      <Input />
+      <FirstNameInput />
+      <LastNameInput />
     </>
   );
 }
 ```
-See the full example here: https://codesandbox.io/s/use-common-state-2-ugcgi
+See the full example here: https://codesandbox.io/s/use-common-state-2-y8x46
 
 ## Advanced usage
 In complex web apps, when managing huge data structures and working with different APIs you will likely think about splitting the monolithic common state into small independent parts.
@@ -96,34 +114,46 @@ For this purposes you can use `createCommonState` factory function which returns
 ```
 import React from "react";
 import { createCommonState } from "use-common-state";
-import { FirstName, LastName, Input } from "../components";
+import { FirstName, LastName, FirstNameInput, LastNameInput } from "../components";
 
 const [useUser, setUser] = createCommonState({
   isLoading: true,
+  user: null,
+  error: null
 });
 
 const fetchUser = () => {
   setUser("isLoading", true);
-  fetch("path/to/user")
-    .then(res => res.json())
-    .then(user => setUser({...user, isLoading: false}))
+  ajax("path/to/user/api")
+    .then(user => setUser({ user }))
+    .catch(err => setUser("error", err))
+    .finally(() => setUser("isLoading", false));
 };
 
 function Page() {
-  const [isLoadingUser] = useUser("isLoading");
+  const [isLoadingUser = true] = useUser("isLoading");
+  const [userError] = useUser("error");
 
   React.useEffect(() => {
     fetchUser();
   }, []);
 
-  return isLoadingUser ? (
-    "Loading user..."
-  ) : (
+  if (isLoadingUser) {
+    return "Loading user...";
+  }
+
+  if (userError) {
+    return userError.message;
+  }
+
+  return (
     <>
       <FirstName />
       <LastName />
-      <Input />
+      <FirstNameInput />
+      <LastNameInput />
     </>
   );
 }
 ```
+See full example here: https://codesandbox.io/s/use-common-state-3-55v7r

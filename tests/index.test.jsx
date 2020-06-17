@@ -14,13 +14,11 @@ describe('useCommonState hook', () => {
 
   const UserName1 = (props) => {
     const { userId } = props;
-    const [firstName] = useCommonState(
+    const [firstName = 'defaultFirstName'] = useCommonState(
       ['users', userId, 'firstName'],
-      'defaultFirstName',
     );
-    const [lastName] = useCommonState(
+    const [lastName = 'defaultLastName'] = useCommonState(
       `users.${userId}.lastName`,
-      'defaultLastName',
     );
     userName1Render();
     return `${firstName} ${lastName}`;
@@ -261,10 +259,11 @@ describe('createCommonState', () => {
 
     AvengerName = (props) => {
       const { id } = props;
-      const [avenger] = useAvengers(id, {
+      const defaultAvenger = {
         firstName: 'defaultFirstName',
         lastName: 'defaultLastName',
-      });
+      };
+      const [avenger = defaultAvenger] = useAvengers(id);
       avengerNameRender();
       return `${avenger.firstName} ${avenger.lastName}`;
     };

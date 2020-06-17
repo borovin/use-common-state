@@ -18,7 +18,7 @@ function pathToArray(path) {
   return [];
 }
 
-function get(obj, pathArray = [], defaultValue) {
+function get(obj, pathArray = []) {
   if (!pathArray.length) {
     return obj;
   }
@@ -32,7 +32,7 @@ function get(obj, pathArray = [], defaultValue) {
 
     if (typeof result === 'undefined') {
       arr.splice(1);
-      return defaultValue;
+      return undefined;
     }
 
     return result;
@@ -75,10 +75,10 @@ export function createCommonState(initialState = {}) {
     localStateSetters.forEach((localStatePath, localStateSetter) => localStateSetter(get(commonStates[commonStateId], localStatePath)));
   }
 
-  function useCommonState(path, defaultValue) {
+  function useCommonState(path) {
     const pathArray = pathToArray(path);
     const pathString = JSON.stringify(pathArray);
-    const value = get(commonStates[commonStateId], pathArray, defaultValue);
+    const value = get(commonStates[commonStateId], pathArray);
     const localStateSetter = useState(value)[1];
 
     useEffect(() => function cleanup() {
