@@ -47,7 +47,7 @@ function set(obj, pathArray = [], value) {
   }
 
   const key = pathArray[0];
-  const result = Array.isArray(obj) ? obj.slice() : ({ ...obj });
+  const result = Array.isArray(obj) ? obj.slice() : (Object.assign({}, obj));
 
   result[key] = set(result[key], pathArray.slice(1), value);
 
